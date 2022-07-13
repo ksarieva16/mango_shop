@@ -1,1 +1,1 @@
-web: gunicorn shop.wsgi
+web: gunicorn mango_shop.wsgi
