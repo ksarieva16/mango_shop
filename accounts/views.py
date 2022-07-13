@@ -6,23 +6,25 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.permissions import IsAuthenticated
-
+from drf_yasg.utils import swagger_auto_schema
 from .serializers import (RegistrationSerializer, LoginSerializer,
                           RestorePasswordSerializer,
                           RestorePasswordCompleteSerializer,
                           ChangePasswordSerializer)
 
 
+
 User = get_user_model()
 
 
 class RegistrationView(APIView):
+    @swagger_auto_schema(request_body=RegistrationSerializer)
     def post(self, request):
         data = request.data
         serializer = RegistrationSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.create()
-            return Response('Регистрация прошла успешно')
+            return Response('Вы успешно зарегистрировались', status=201)
 
 
 class ActivationView(APIView):
@@ -32,7 +34,7 @@ class ActivationView(APIView):
             user.is_active = True
             user.activation_code = ''
             user.save()
-            return Response('Вы успешно активировали аккаунт')
+            return Response('Ваш аккаунт успешно активирован')
         except User.DoesNotExist:
             raise Http404
 
@@ -72,7 +74,7 @@ class RestorePasswordCompleteView(APIView):
         serializer = RestorePasswordCompleteSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.set_new_password()
-            return Response('Пароль успешно обновлён')
+            return Response('Вы успешно восстановили пароль')
 
 
 class ChangePasswordView(APIView):
