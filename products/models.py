@@ -8,6 +8,11 @@ class Category(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100)
 
+    class Meta:
+        ordering = ('title',)
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
     def __str__(self) -> str:
         return self.title
 
