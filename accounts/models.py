@@ -1,25 +1,27 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.core.mail import send_mail
 from django.db import models
+from django.utils.crypto import get_random_string
 
 
 class UserManager(BaseUserManager):
-    def _create(self, email, password, name, **extra_fields):
+    def _create(self, email, password, name, **fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name, **extra_fields)
+        user = self.model(email=email, name=name, **fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_user(self, email, password, name, **extra_fields):
-        extra_fields.setdefault('is_active', False)
-        extra_fields.setdefault('is_staff', False)
-        return self._create(email, password, name, **extra_fields)
+    def create_user(self, email, password, name, **fields):
+        fields.setdefault('is_active', False)
+        fields.setdefault('is_staff', False)
+        return self._create(email, password, name, **fields)
 
-    def create_superuser(self, email, password, name, **extra_fields):
-        extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('is_staff', True)
-        return self._create(email, password, name, **extra_fields)
+    def create_superuser(self, email, password, name, **fields):
+        fields.setdefault('is_active', True)
+        fields.setdefault('is_staff', True)
+        return self._create(email, password, name, **fields)
 
 
 class User(AbstractBaseUser):
@@ -28,7 +30,7 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    activation_code = models.CharField(max_length=20, blank=True)
+    activation_code = models.CharField(max_length=20, blank=True, verbose_name='activation_code')
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
@@ -44,21 +46,16 @@ class User(AbstractBaseUser):
         return self.is_staff
 
     def create_activation_code(self):
-        from django.utils.crypto import get_random_string
         code = get_random_string(20)
         self.activation_code = code
         self.save()
         return code
 
     def send_activation_code(self):
-        from django.core.mail import send_mail
-        activation_link = f'http://127.0.0.1:8000/account/activation/{self.activation_code}'
-        send_mail(
-            subject='Account activation',
-            message=activation_link,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[self.email],
-            fail_silently=False)
-
-
-
+        activation_link = f'http://localhost:8000/account/activation/' \
+                          f'{self.activation_code}'
+        send_mail(subject='Activation',
+                  message=activation_link,
+                  from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[self.email],
+                  fail_silently=False)

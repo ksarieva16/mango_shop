@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.generics import RetrieveAPIView
+
 from mango_shop import settings
 
 User = get_user_model()
@@ -13,7 +13,6 @@ class RegistrationSerializer(serializers.Serializer):
     name = serializers.CharField()
     password = serializers.CharField(min_length=4)
     password_confirm = serializers.CharField(min_length=4)
-
 
     def validate_email(self, email):
         if User.objects.filter(email=email).exists():
@@ -120,4 +119,3 @@ class ChangePasswordSerializer(serializers.Serializer):
         user = self.context['request'].user
         password = self.validated_data.get('new_password')
         user.set_password(password)
-        user.save()
