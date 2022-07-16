@@ -1,6 +1,4 @@
 from django.urls import path
-
-
 from .views import (RegistrationView, ActivationView, LoginView, UpdateTokenView,
                     LogoutView, RestorePasswordView, RestorePasswordCompleteView,
                     ChangePasswordView)
