@@ -52,16 +52,16 @@ class Comment(models.Model):
         ordering = ['-created_at']
 
 
-# class Image(models.Model):
-#     clothes = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='clothes_image')
-#     image = models.ImageField(upload_to='products')
-#
-#     def __str__(self):
-#         return f'{self.clothes}'
-#
-#     class Meta:
-#         verbose_name = 'Image'
-#         verbose_name_plural = 'Images'
+class Image(models.Model):
+    clothes = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='clothes_image')
+    image = models.ImageField(upload_to='products')
+
+    def __str__(self):
+        return f'{self.clothes}'
+
+    class Meta:
+        verbose_name = 'Image'
+        verbose_name_plural = 'Images'
 
 
 class Like(models.Model):
