@@ -1,9 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.db import models
-from datetime import datetime
+from django.contrib.auth import get_user_model
 from slugify import slugify
-
-User = get_user_model()
+from datetime import datetime
 
 
 class Category(models.Model):
@@ -30,10 +28,21 @@ class Product(models.Model):
     category = models.ForeignKey(Category,
                                  on_delete=models.CASCADE,
                                  related_name='products')
-    # image = models.ImageField(upload_to='products', blank=True, null=True)
+    image = models.ImageField(upload_to='products', blank=True, null=True)
 
     def __str__(self) -> str:
         return self.title
+
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name='reviews')
+    author = models.ForeignKey(get_user_model(),
+                               on_delete=models.CASCADE,
+                               related_name='reviews')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Comment(models.Model):
@@ -52,16 +61,16 @@ class Comment(models.Model):
         ordering = ['-created_at']
 
 
-class Image(models.Model):
-    clothes = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='clothes_image')
-    image = models.ImageField(upload_to='products')
-
-    def __str__(self):
-        return f'{self.clothes}'
-
-    class Meta:
-        verbose_name = 'Image'
-        verbose_name_plural = 'Images'
+# class Image(models.Model):
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='image')
+#     image = models.ImageField(upload_to='product_products, blank=True, null=True')
+#
+#     def __str__(self):
+#         return f'{self.product}'
+#
+#     class Meta:
+#         verbose_name = 'Image'
+#         verbose_name_plural = 'Images'
 
 
 class Like(models.Model):

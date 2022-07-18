@@ -18,6 +18,7 @@ from decouple import config
 from django.conf import settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# корневая папка проекта
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,16 +26,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+# Секретный ключ - используется для построения шифров
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool, default=True)
+# Режим разработки(включен или нет, в продакшн должно быть False)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split()
+# Разрешенные хосты - с каких доменных и ip адресов есть доступ к проекту
 
 
 # Application definition
-
+# Отвечает за установленные приложения
+# (сначала приложения Джанго, сторонние, из проекта(желательно в алфавитном порядке))
 INSTALLED_APPS = [
+    # приложения Джанго
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # сторонние приложения
     'rest_framework',
     'django_filters',
     'rest_framework_simplejwt',
@@ -49,6 +56,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
 
+    # из проекта
     'products',
     'orders',
     'accounts',
@@ -57,6 +65,7 @@ INSTALLED_APPS = [
 
 ]
 
+# промежуточные слои (специальные классы, которые отвечают за обработку запросов и ответов
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -69,8 +78,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+# описывается, какой файл отвечает за пути
 ROOT_URLCONF = 'mango_shop.urls'
 
+
+# настройки шаблонов (html шаблоны)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -87,12 +100,15 @@ TEMPLATES = [
     },
 ]
 
+
+# описывается, какой будет веб-сервер
 WSGI_APPLICATION = 'mango_shop.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# настройки подключения к БД
 DATABASES = {
     'default': {
         'ENGINE': config('DB_ENGINE'),
@@ -104,12 +120,14 @@ DATABASES = {
     }
 }
 
-
+# регистрация модели пользователя
 AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
+
+# Валидация пароля
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',

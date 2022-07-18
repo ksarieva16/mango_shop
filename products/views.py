@@ -4,13 +4,17 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
 from drf_yasg.utils import swagger_auto_schema
 
+from rest_framework.generics import (ListAPIView, CreateAPIView,
+                                     RetrieveAPIView, UpdateAPIView,
+                                     DestroyAPIView, ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView)
 
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
-from .models import Product, Comment, Image, Category, Like, Favorites
+from .models import Product, Comment, Category, Like, Favorites
 from .serializers import (ProductSerializer, CommentSerializer,
-                          ImageSerializer,  CategorySerializer,
+                          CategorySerializer,
                           LikeSerializer, FavoritesSerializer)
 from .permissions import IsAuthor
 
@@ -21,9 +25,10 @@ from products.filters import ProductPriceFilter
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
-    search_fields = ['title', 'description']
+    filter_backends = [SearchFilter]
+    search_fields = ['name', 'description']
     filterset_class = ProductPriceFilter
+    permission_classes = [permissions.AllowAny]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -38,6 +43,31 @@ class ProductViewSet(ModelViewSet):
         return super().get_permissions()
 
 
+class CreateProductView(CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductListCreateView(ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductDetailsView(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductUpdateView(UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductDeleteView(DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
 @swagger_auto_schema(request_body=CommentSerializer)
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
@@ -49,17 +79,17 @@ class CommentViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-@swagger_auto_schema(request_body=ImageSerializer)
-class ImageView(ModelViewSet):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
+# @swagger_auto_schema(request_body=ImageSerializer)
+# class ImageView(ModelViewSet):
+#     queryset = Image.objects.all()
+#     serializer_class = ImageSerializer
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            self.permission_classes = [permissions.AllowAny]
-        elif self.action in ['destroy', 'update', 'partial_update', 'create']:
-            self.permission_classes = [permissions.IsAdminUser]
-        return super().get_permissions()
+    # def get_permissions(self):
+    #     if self.action in ['list', 'retrieve']:
+    #         self.permission_classes = [permissions.AllowAny]
+    #     elif self.action in ['destroy', 'update', 'partial_update', 'create']:
+    #         self.permission_classes = [permissions.IsAdminUser]
+    #     return super().get_permissions()
 
 
 @swagger_auto_schema(request_body=CategorySerializer)

@@ -27,6 +27,7 @@ class Order(models.Model):
     def __str__(self):
         return f'Order #{self.id}'
 
+
 class OrderItems(models.Model):
     order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.RESTRICT)

@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    """ Модель пользователя """
     email = models.EmailField(primary_key=True)
     name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50, blank=True)
@@ -30,13 +31,17 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     activation_code = models.CharField(max_length=20, blank=True)
 
+    # привязка менеджера
     objects = UserManager()
+    # указывает поле, которое будет использоваться как логин
     USERNAME_FIELD = 'email'
+    # указываются обязательные поля, кроме username и password
     REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.email
 
+    # какие пользователи могут иметь доступ к админ панели и действиям в ней
     def has_module_perms(self, app_label):
         return self.is_staff
 
