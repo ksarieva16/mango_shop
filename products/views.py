@@ -79,18 +79,6 @@ class CommentViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-# @swagger_auto_schema(request_body=ImageSerializer)
-# class ImageView(ModelViewSet):
-#     queryset = Image.objects.all()
-#     serializer_class = ImageSerializer
-
-    # def get_permissions(self):
-    #     if self.action in ['list', 'retrieve']:
-    #         self.permission_classes = [permissions.AllowAny]
-    #     elif self.action in ['destroy', 'update', 'partial_update', 'create']:
-    #         self.permission_classes = [permissions.IsAdminUser]
-    #     return super().get_permissions()
-
 
 @swagger_auto_schema(request_body=CategorySerializer)
 class CategoryViewSet(ModelViewSet):

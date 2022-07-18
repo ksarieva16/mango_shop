@@ -45,28 +45,6 @@ class CommentSerializer(serializers.ModelSerializer):
         return comment
 
 
-# class ImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Image
-#         fields = ['image', 'id']
-
-    # def get_image_url(self, obj):
-    #     if obj.image:
-    #         url = obj.image.url
-    #         request = self.context.get('request')
-    #         if request is not None:
-    #             url = request.build_absolute_url(url)
-    #     else:
-    #         url = ''
-    #     return url
-
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['image'] = self.get_image_url(instance)
-    #
-    #     return representation
-
-
 class FavoritesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorites
