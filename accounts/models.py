@@ -60,3 +60,7 @@ class User(AbstractBaseUser):
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[self.email],
             fail_silently=False)
+
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
