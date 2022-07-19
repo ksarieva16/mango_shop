@@ -1,10 +1,9 @@
-
 from rest_framework.viewsets import ModelViewSet
 
 from rest_framework import permissions
 from drf_yasg.utils import swagger_auto_schema
 
-from rest_framework.generics import (CreateAPIView,
+from rest_framework.generics import (ListAPIView, CreateAPIView,
                                      RetrieveAPIView, UpdateAPIView,
                                      DestroyAPIView, ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView)
@@ -26,7 +25,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['title', 'description']
+    search_fields = ['name', 'description']
     filterset_class = ProductPriceFilter
     permission_classes = [permissions.AllowAny]
 
@@ -79,6 +78,7 @@ class CommentViewSet(ModelViewSet):
         return super().get_permissions()
 
 
+
 @swagger_auto_schema(request_body=CategorySerializer)
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
@@ -102,4 +102,3 @@ class LikeViewSet(ModelViewSet):
 class FavoritesViewSet(ModelViewSet):
     queryset = Favorites.objects.all()
     serializer_class = FavoritesSerializer
-
