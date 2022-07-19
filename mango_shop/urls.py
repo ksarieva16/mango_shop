@@ -21,7 +21,6 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from products.views import (ProductViewSet)
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -42,6 +41,8 @@ urlpatterns = [
     path('account/', include('accounts.urls')),
     path('', include('products.urls')),
     path('', include('orders.urls')),
+    path('', include('cart.urls')),
+
     ]
 
 if settings.DEBUG:

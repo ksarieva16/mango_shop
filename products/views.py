@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
 from drf_yasg.utils import swagger_auto_schema
 
-from rest_framework.generics import (ListAPIView, CreateAPIView,
+from rest_framework.generics import (CreateAPIView,
                                      RetrieveAPIView, UpdateAPIView,
                                      DestroyAPIView, ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView)
@@ -26,7 +26,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [SearchFilter]
-    search_fields = ['name', 'description']
+    search_fields = ['title', 'description']
     filterset_class = ProductPriceFilter
     permission_classes = [permissions.AllowAny]
 
@@ -77,7 +77,6 @@ class CommentViewSet(ModelViewSet):
         if self.action in ['destroy', 'update', 'partial_update']:
             self.permission_classes = [IsAuthor]
         return super().get_permissions()
-
 
 
 @swagger_auto_schema(request_body=CategorySerializer)
