@@ -41,14 +41,14 @@ class ProductViewSet(ModelViewSet):
 
 
 @swagger_auto_schema(request_body=LikeSerializer)
-class LikedProductViewSet(ModelViewSet):
+class LikeViewSet(ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 @swagger_auto_schema(request_body=FavoriteSerializer)
-class FavoriteProductViewSet(ModelViewSet):
+class FavoriteViewSet(ModelViewSet):
     queryset = Favorites.objects.all()
     serializer_class = FavoriteSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
