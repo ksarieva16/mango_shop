@@ -29,20 +29,20 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-    # def to_representation(self, instance):
-    #     rep = super().to_representation(instance)
-    #     rep['comments'] = CommentSerializer(instance.comments.all(), many=True).data
-    #     # rep['image'] = ImageSerializer(instance.product_image.all(), many=True, context=self.context).data
-    #     rep['like'] = LikeSerializer(instance.like.all(), many=True).data
-    #     rep['favorites'] = FavoriteSerializer(instance.favorites.all(), many=True).data
-    #
-    #     like = sum([dict(i)['like'] for i in rep['like']])
-    #     rep['like'] = like
-    #
-    #     favorites = sum([dict(i)['favorites'] for i in rep['favorites']])
-    #     rep['favorites'] = favorites
-    #
-    #     return rep
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['comments'] = CommentSerializer(instance.comments.all(), many=True).data
+        # rep['image'] = ImageSerializer(instance.product_image.all(), many=True, context=self.context).data
+        rep['like'] = LikeSerializer(instance.like.all(), many=True).data
+        rep['favorites'] = FavoriteSerializer(instance.favorites.all(), many=True).data
+
+        like = sum([dict(i)['like'] for i in rep['like']])
+        rep['like'] = like
+
+        favorites = sum([dict(i)['favorites'] for i in rep['favorites']])
+        rep['favorites'] = favorites
+
+        return rep
 
 
 class ReviewSerializer(serializers.ModelSerializer):
