@@ -5,9 +5,13 @@ from datetime import datetime
 
 User = get_user_model()
 
+""" Классы, которые наследуются от models.Model являются моделями, то есть отвечают за связь с БД через ORM.
+   В БД будет создана таблица с указанными полями """
+
 
 class Category(models.Model):
     title = models.CharField(max_length=256)
+    # CharField - VARCHAR(), обязательное свойство max_length
     slug = models.SlugField(max_length=256, blank=True, primary_key=True)
 
     def __str__(self):
@@ -61,6 +65,8 @@ class ProductReview(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments')
+    """ ForeignKey - поле для свзязи с другой моделью. Обязательное свойство: модель, on_delete - определяет, 
+       что произойдет с объявлением, если удалить из БД """
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
