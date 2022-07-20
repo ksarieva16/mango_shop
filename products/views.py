@@ -41,15 +41,23 @@ class ProductViewSet(ModelViewSet):
             self.permission_classes = [permissions.IsAdminUser]
         return super().get_permissions()
 
-    @action(detail=True, methods=['post'])
+    @action(['GET'], detail=True)
     def like(self, request, pk=None):
         product = self.get_object()
-        obj, created = Like.objects.get_or_create(user=request.user, product=product)
-        if not created:
-            obj.like = not obj.like
-            obj.save()
-        liked_or_unliked = 'liked' if obj.like else 'unliked'
-        return Response('Successfully {} product'.format(liked_or_unliked), status=status.HTTP_200_OK)
+        user = request.user
+
+        try:
+            like = Like.objects.filter(product_id=product, author=user)
+            res = not like[0].like
+            if res:
+                like[0].save()
+            else:
+                like.delete()
+            message = 'Like' if like else 'Dislike'
+        except IndexError:
+            Like.objects.create(product_id=product.id, author=user, like=True)
+            message = 'Like'
+        return Response(message, status=200)
 
     @action(['GET'], detail=True)
     def favorite(self, request, pk=None):
@@ -67,6 +75,8 @@ class ProductViewSet(ModelViewSet):
             Favorites.objects.create(product_id=product.id, author=user, favorites=True)
             message = 'In favorites'
         return Response(message, status=200)
+
+
 
 
 
