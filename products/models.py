@@ -29,7 +29,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category,
                                  on_delete=models.CASCADE,
                                  related_name='products')
-    main_photo = models.ImageField(upload_to='product_photos')
+    main_photo = models.ImageField(upload_to='product_photos', blank=True)
     # image1 = models.ImageField(upload_to='products', blank=True, null=True)
     # image2 = models.ImageField(upload_to='products', blank=True, null=True)
     # image3 = models.ImageField(upload_to='products', blank=True, null=True)

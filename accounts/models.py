@@ -39,7 +39,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['name']
 
     def __str__(self):
-        return self.email
+        return f'{self.email}'
 
     # какие пользователи могут иметь доступ к админ панели и действиям в ней
     def has_module_perms(self, app_label):

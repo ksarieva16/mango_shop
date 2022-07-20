@@ -16,7 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.ReadOnlyField(source='author.name')
 
     class Meta:
         model = Comment
@@ -29,6 +29,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.name')
     class Meta:
         model = Product
         fields = '__all__'
@@ -54,11 +55,11 @@ class ProductSerializer(serializers.ModelSerializer):
         action = self.context.get('action')
         if action == 'retrieve':
             photos = PhotoSerializer(instance.photos.all(), many=True).data
-            photos.append({"photo": "media/" + ''.join(representation['photo'].split('media')[1:])})
+            photos.append({"photo": "media/" + ''.join(representation['main_photo'].split('media')[1:])})
             representation['photos'] = photos
             comments = CommentSerializer(instance.comments.all(), many=True).data
             representation['comments'] = comments
-            representation.pop('photo')
+            representation.pop('main_photo')
         elif action == 'list':
             comments = CommentSerializer(instance.comments.all(), many=True).data
             if not comments:
