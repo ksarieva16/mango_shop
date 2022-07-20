@@ -39,15 +39,19 @@ class ProductViewSet(ModelViewSet):
             self.permission_classes = [permissions.IsAdminUser]
         return super().get_permissions()
 
-    class LikedProductViewSet(ModelViewSet):
-        queryset = Like.objects.all()
-        serializer_class = LikeSerializer
-        permission_classes = [IsAuthenticatedOrReadOnly]
 
-    class FavoriteProductViewSet(ModelViewSet):
-        queryset = Favorites.objects.all()
-        serializer_class = FavoriteSerializer
-        permission_classes = [IsAuthenticatedOrReadOnly]
+@swagger_auto_schema(request_body=LikeSerializer)
+class LikedProductViewSet(ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+
+@swagger_auto_schema(request_body=FavoriteSerializer)
+class FavoriteProductViewSet(ModelViewSet):
+    queryset = Favorites.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 
