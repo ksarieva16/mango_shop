@@ -120,13 +120,13 @@ class CategoryViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-# @swagger_auto_schema(request_body=ProductSerializer)
-# class LikeViewSet(ModelViewSet):
-#     queryset = Like.objects.all()
-#     serializer_class = LikeSerializer
-#
-#
-# @swagger_auto_schema(request_body=ProductSerializer)
-# class FavoritesViewSet(ModelViewSet):
-#     queryset = Favorites.objects.all()
-#     serializer_class = FavoriteSerializer
+@swagger_auto_schema(request_body=ProductSerializer)
+class LikeViewSet(ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+
+
+@swagger_auto_schema(request_body=ProductSerializer)
+class FavoritesViewSet(ModelViewSet):
+    queryset = Favorites.objects.all()
+    serializer_class = FavoriteSerializer
