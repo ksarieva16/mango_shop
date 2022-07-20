@@ -24,14 +24,15 @@ class Category(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    # price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(Category,
                                  on_delete=models.CASCADE,
                                  related_name='products')
-    image1 = models.ImageField(upload_to='products', blank=True, null=True)
-    image2 = models.ImageField(upload_to='products', blank=True, null=True)
-    image3 = models.ImageField(upload_to='products', blank=True, null=True)
-    image4 = models.ImageField(upload_to='products', blank=True, null=True)
+    # image1 = models.ImageField(upload_to='products', blank=True, null=True)
+    # image2 = models.ImageField(upload_to='products', blank=True, null=True)
+    # image3 = models.ImageField(upload_to='products', blank=True, null=True)
+    # image4 = models.ImageField(upload_to='products', blank=True, null=True)
 
     def __str__(self) -> str:
         return self.title

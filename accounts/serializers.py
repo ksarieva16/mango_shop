@@ -8,6 +8,7 @@ from mango_shop import settings
 User = get_user_model()
 
 
+
 class RegistrationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     name = serializers.CharField()
