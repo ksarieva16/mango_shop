@@ -1,3 +1,7 @@
+from cgitb import reset
+from django.shortcuts import render
+from accounts.admin import User
+from products.filters import ProductPriceFilter
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework import permissions
@@ -13,21 +17,17 @@ from rest_framework.filters import SearchFilter
 
 from .models import Product, Comment, Category, Like, Favorites
 from .serializers import (ProductSerializer, CommentSerializer,
-                          CategorySerializer,
-                          LikeSerializer, FavoriteSerializer)
+                          CategorySerializer)
 from .permissions import IsAuthor
 
-from products.filters import ProductPriceFilter
 
-
-@swagger_auto_schema(request_body=ProductSerializer)
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     search_fields = ['title', 'description']
     filterset_class = ProductPriceFilter
-    permission_classes = [permissions.AllowAny]
+
 
     def get_serializer_class(self):
         if self.action == 'list':
