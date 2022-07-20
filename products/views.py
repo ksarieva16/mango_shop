@@ -24,8 +24,8 @@ from products.filters import ProductPriceFilter
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ['name', 'description']
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['title', 'description']
     filterset_class = ProductPriceFilter
     permission_classes = [permissions.AllowAny]
 
@@ -70,29 +70,29 @@ class ProductViewSet(ModelViewSet):
 
 
 
-class CreateProductView(CreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductListCreateView(ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductDetailsView(RetrieveAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductUpdateView(UpdateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductDeleteView(DestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+# class CreateProductView(CreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductListCreateView(ListCreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductDetailsView(RetrieveAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductUpdateView(UpdateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductDeleteView(DestroyAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
 
 
 @swagger_auto_schema(request_body=CommentSerializer)
@@ -119,13 +119,13 @@ class CategoryViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-@swagger_auto_schema(request_body=ProductSerializer)
-class LikeViewSet(ModelViewSet):
-    queryset = Like.objects.all()
-    serializer_class = LikeSerializer
-
-
-@swagger_auto_schema(request_body=ProductSerializer)
-class FavoritesViewSet(ModelViewSet):
-    queryset = Favorites.objects.all()
-    serializer_class = FavoriteSerializer
+# @swagger_auto_schema(request_body=ProductSerializer)
+# class LikeViewSet(ModelViewSet):
+#     queryset = Like.objects.all()
+#     serializer_class = LikeSerializer
+#
+#
+# @swagger_auto_schema(request_body=ProductSerializer)
+# class FavoritesViewSet(ModelViewSet):
+#     queryset = Favorites.objects.all()
+#     serializer_class = FavoriteSerializer

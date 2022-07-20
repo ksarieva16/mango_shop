@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from multiprocessing import context
 from products.models import Product, ProductReview, Comment, Category, Like, Favorites
-
+from django.db import IntegrityError
 from accounts.models import User
 
 # class PhotoSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class ProductSerializer(serializers.ModelSerializer):
         rep['comments'] = CommentSerializer(instance.comments.all(), many=True).data
         # rep['image'] = ImageSerializer(instance.product_image.all(), many=True, context=self.context).data
         rep['like'] = LikeSerializer(instance.like.all(), many=True).data
-        rep['favorites'] = FavoritesSerializer(instance.favorites.all(), many=True).data
+        rep['favorites'] = FavoriteSerializer(instance.favorites.all(), many=True).data
 
         like = sum([dict(i)['like'] for i in rep['like']])
         rep['like'] = like
@@ -90,7 +90,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    # author = serializers.ReadOnlyField(source='author.email')
+    author = serializers.ReadOnlyField(source='author.email')
 
     class Meta:
         model = ProductReview
@@ -109,16 +109,16 @@ class FavoriteSerializer(serializers.ModelSerializer):
         model = Favorites
         fields = '__all__'
 
-    def create(self, validated_data):
-        request = self.context.get('request')
-        user = request.user
-        favourite = Favorites.objects.create(user=user, **validated_data)
-        return favourite
-
-    def to_representation(self, instance):
-        representation = super(FavoriteSerializer, self).to_representation(instance)
-        representation['user'] = instance.user.email
-        return representation
+    # def create(self, validated_data):
+    #     request = self.context.get('request')
+    #     user = request.user
+    #     favourite = Favorites.objects.create(user=user, **validated_data)
+    #     return favourite
+    #
+    # def to_representation(self, instance):
+    #     representation = super(FavoriteSerializer, self).to_representation(instance)
+    #     representation['user'] = instance.user.email
+    #     return representation
 
 
 class LikeSerializer(serializers.ModelSerializer):
