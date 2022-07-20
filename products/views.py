@@ -69,30 +69,30 @@ class ProductViewSet(ModelViewSet):
         return Response(message, status=200)
 
 
-
-class CreateProductView(CreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductListCreateView(ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductDetailsView(RetrieveAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductUpdateView(UpdateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductDeleteView(DestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+#
+# class CreateProductView(CreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductListCreateView(ListCreateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductDetailsView(RetrieveAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductUpdateView(UpdateAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
+#
+#
+# class ProductDeleteView(DestroyAPIView):
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
 
 
 @swagger_auto_schema(request_body=CommentSerializer)
@@ -104,7 +104,6 @@ class CommentViewSet(ModelViewSet):
         if self.action in ['destroy', 'update', 'partial_update']:
             self.permission_classes = [IsAuthor]
         return super().get_permissions()
-
 
 
 @swagger_auto_schema(request_body=CategorySerializer)
