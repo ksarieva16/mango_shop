@@ -30,7 +30,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(read_only=True)
+    # author = serializers.ReadOnlyField(read_only=True)
     class Meta:
         model = Product
         fields = '__all__'
@@ -90,7 +90,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.email')
+    # author = serializers.ReadOnlyField(source='author.email')
 
     class Meta:
         model = ProductReview
