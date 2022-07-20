@@ -14,7 +14,7 @@ from rest_framework.filters import SearchFilter
 from .models import Product, Comment, Category, Like, Favorites
 from .serializers import (ProductSerializer, CommentSerializer,
                           CategorySerializer,
-                          LikeSerializer, FavoritesSerializer)
+                          LikeSerializer, FavoriteSerializer)
 from .permissions import IsAuthor
 
 from products.filters import ProductPriceFilter
@@ -41,17 +41,33 @@ class ProductViewSet(ModelViewSet):
             self.permission_classes = [permissions.IsAdminUser]
         return super().get_permissions()
 
-    @action(detail=False, methods=['get'])
-    def search(self, request, pk=None):
-        q = request.query_params.get('q')
-        queryset = self.get_queryset()
-        queryset = queryset.filter(title__icontains=q)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = ProductSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        product = self.get_object()
+        obj, created = Like.objects.get_or_create(user=request.user, product=product)
+        if not created:
+            obj.like = not obj.like
+            obj.save()
+        liked_or_unliked = 'liked' if obj.like else 'unliked'
+        return Response('Successfully {} product'.format(liked_or_unliked), status=status.HTTP_200_OK)
+
+    @action(['GET'], detail=True)
+    def favorite(self, request, pk=None):
+        product = self.get_object()
+        user = request.user
+        try:
+            favorites = Favorites.objects.filter(product_id=product, author=user)
+            res = not favorites[0].favorites
+            if res:
+                favorites[0].save()
+            else:
+                favorites.delete()
+            message = 'In favorites' if favorites else 'Not in favorites'
+        except IndexError:
+            Favorites.objects.create(product_id=product.id, author=user, favorites=True)
+            message = 'In favorites'
+        return Response(message, status=200)
+
 
 
 class CreateProductView(CreateAPIView):
@@ -104,13 +120,13 @@ class CategoryViewSet(ModelViewSet):
         return super().get_permissions()
 
 
-@swagger_auto_schema(request_body=ProductSerializer)
-class LikeViewSet(ModelViewSet):
-    queryset = Like.objects.all()
-    serializer_class = LikeSerializer
-
-
-@swagger_auto_schema(request_body=ProductSerializer)
-class FavoritesViewSet(ModelViewSet):
-    queryset = Favorites.objects.all()
-    serializer_class = FavoritesSerializer
+# @swagger_auto_schema(request_body=ProductSerializer)
+# class LikeViewSet(ModelViewSet):
+#     queryset = Like.objects.all()
+#     serializer_class = LikeSerializer
+#
+#
+# @swagger_auto_schema(request_body=ProductSerializer)
+# class FavoritesViewSet(ModelViewSet):
+#     queryset = Favorites.objects.all()
+#     serializer_class = FavoriteSerializer

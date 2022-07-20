@@ -5,6 +5,7 @@ from datetime import datetime
 
 User = get_user_model()
 
+
 class Category(models.Model):
     title = models.CharField(max_length=256)
     slug = models.SlugField(max_length=256, blank=True, primary_key=True)
@@ -23,7 +24,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
+    # author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
     title = models.CharField(max_length=256)
     description = models.TextField()
     # price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -73,9 +74,6 @@ class Comment(models.Model):
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
         ordering = ['-created_at']
-
-
-
 
 
 class Like(models.Model):

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from multiprocessing import context
 from products.models import Product, ProductReview, Comment, Category, Like, Favorites
 
+from accounts.models import User
 
 # class PhotoSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -29,7 +30,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    # author = serializers.ReadOnlyField(source='author.name')
+    author = serializers.ReadOnlyField(read_only=True)
     class Meta:
         model = Product
         fields = '__all__'
@@ -89,17 +90,35 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    author = serializers.ReadOnlyField(source='author.email')
 
     class Meta:
         model = ProductReview
         fields = ('id', 'author', 'product', 'text', 'created_at')
 
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        validated_data['author'] = user
 
-class FavoritesSerializer(serializers.ModelSerializer):
+        return super().create(validated_data)
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorites
-        fields = ['author', 'product', 'favorites']
+        fields = '__all__'
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        favourite = Favorites.objects.create(user=user, **validated_data)
+        return favourite
+
+    def to_representation(self, instance):
+        representation = super(FavoriteSerializer, self).to_representation(instance)
+        representation['user'] = instance.user.email
+        return representation
 
 
 class LikeSerializer(serializers.ModelSerializer):
