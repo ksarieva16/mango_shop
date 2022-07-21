@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from slugify import slugify
-from datetime import datetime
+
 
 User = get_user_model()
 
@@ -36,19 +36,10 @@ class Product(models.Model):
     category = models.ForeignKey(Category,
                                  on_delete=models.CASCADE,
                                  related_name='products')
-    # main_photo = models.ImageField(upload_to='product_photos', blank=True)
     image = models.ImageField(upload_to='products', blank=True, null=True)
-    # image2 = models.ImageField(upload_to='products', blank=True, null=True)
-    # image3 = models.ImageField(upload_to='products', blank=True, null=True)
-    # image4 = models.ImageField(upload_to='products', blank=True, null=True)
 
     def __str__(self) -> str:
         return self.title
-
-
-# class Photo(models.Model):
-#     photo = models.ImageField(upload_to='product_photos', blank=True, null=True)
-#     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='photos')
 
 
 class ProductReview(models.Model):
@@ -60,7 +51,7 @@ class ProductReview(models.Model):
                                related_name='reviews')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    # photo = models.ImageField(upload_to='photos', blank=True, null=True)
+
 
 
 class Comment(models.Model):
@@ -71,7 +62,7 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # photo = models.ImageField(upload_to='comment_photos', blank=True, null=True)
+
 
     def __str__(self):
         return f'Comment from {self.author.name} to {self.product}'
@@ -89,7 +80,6 @@ class Like(models.Model):
 
     def __str__(self):
         return f'{self.author}: liked {self.product}'
-
 
     class Meta:
         verbose_name = 'like'

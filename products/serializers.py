@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from multiprocessing import context
 from products.models import Product, ProductReview, Comment, Category, Like, Favorites
-from django.db.utils import IntegrityError
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -58,7 +56,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         validated_data['author'] = user
 
         return super().create(validated_data)
-
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
