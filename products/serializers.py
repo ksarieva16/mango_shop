@@ -2,6 +2,7 @@ from rest_framework import serializers
 from products.models import Product, ProductReview, Comment, Category, Like, Favorites, Rating
 from .utils import get_rating
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
