@@ -22,7 +22,10 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['title', 'description']
     filterset_class = ProductPriceFilter
 
-
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProductSerializer
+        return super().get_serializer_class()
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -95,8 +98,6 @@ class CommentViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action in ['destroy', 'update', 'partial_update']:
             self.permission_classes = [IsAuthor]
-        elif self.action in ['create']:
-            self.permission_classes = [permissions.IsAuthenticated]
         return super().get_permissions()
 
 
@@ -120,8 +121,6 @@ class RatingViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'destroy']:
             self.permission_classes = [IsAuthor]
-        elif self.action in ['create']:
-            self.permission_classes = [permissions.IsAuthenticated]
         return super().get_permissions()
 
 
