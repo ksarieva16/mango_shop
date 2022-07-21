@@ -74,11 +74,16 @@ class ProductViewSet(ModelViewSet):
             message = 'In favorites'
         return Response(message, status=200)
 
-    @action(methods=['GET'], detail=False)
-    def search(self, request):
-        query = request.query_params.get('q')
-        queryset = self.get_queryset().filter(Q(title__icontains=query) | Q(description__icontains=query))
-        serializer = self.get_serializer(queryset, many=True)
+    @action(detail=False, methods=['get'])
+    def search(self, request, pk=None):
+        q = request.query_params.get('q')
+        queryset = self.get_queryset()
+        queryset = queryset.filter(title__icontains=q)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['GET'], detail=False)
