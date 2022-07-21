@@ -11,6 +11,12 @@ from .models import Product, Comment, Category, Like, Favorites
 from .serializers import (ProductSerializer, CommentSerializer,
                           CategorySerializer, LikeSerializer, FavoriteSerializer)
 from .permissions import IsAuthor
+from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
+
+
+class PaginationReview(PageNumberPagination):
+    page_size = 10
 
 
 class ProductViewSet(ModelViewSet):
@@ -66,6 +72,31 @@ class ProductViewSet(ModelViewSet):
             Favorites.objects.create(product_id=product.id, author=user, favorites=True)
             message = 'In favorites'
         return Response(message, status=200)
+
+    @action(methods=['GET'], detail=False)
+    def search(self, request):
+        query = request.query_params.get('q')
+        queryset = self.get_queryset().filter(Q(title__icontains=query) | Q(description__icontains=query))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['GET'], detail=False)
+    def sort(self, request):
+        filter = request.query_params.get('filter')
+        if filter == 'A-Z':
+            queryset = self.get_queryset().order_by('title')
+        elif filter == 'Z-A':
+            queryset = self.get_queryset().order_by('-title')
+        elif filter == 'replies':
+            maximum = 0
+            for problem in self.get_queryset():
+                if maximum < problem.replies.count():
+                    maximum = problem.replies.count()
+                    queryset = self.get_queryset().filter(id=problem.id)
+        else:
+            queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(request_body=CommentSerializer)
