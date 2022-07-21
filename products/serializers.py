@@ -1,6 +1,9 @@
 from rest_framework import serializers
-from products.models import Product, ProductReview, Comment, Category, Like, Favorites, Rating
+from products.models import Product, Comment, Category, Like, Favorites, Rating, ProductReview
 from .utils import get_rating
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -23,6 +26,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.email')
+
     class Meta:
         model = Product
         fields = '__all__'
@@ -40,7 +45,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
         favorites = sum([dict(i)['favorites'] for i in rep['favorites']])
         rep['favorites'] = favorites
-
+        rep['username'] = User.objects.get(email=rep['user']).name
+        rep['author'] = str(self.context.get('request').user) == str(rep['user'])
         return rep
 
 

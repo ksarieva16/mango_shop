@@ -15,10 +15,6 @@ from .serializers import (ProductSerializer, CommentSerializer,
 from .permissions import IsAuthor
 
 
-
-
-
-
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
