@@ -53,6 +53,16 @@ class ProductSerializer(serializers.ModelSerializer):
         self.validated_data['user'] = email
         return super().save(**kwargs)
 
+    def create(self, validated_data):
+        product = Product.objects.create(**validated_data)
+        return product
+
+    def update(self, instance, validated_data):
+        request = self.context.get('request')
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        return instance
+
 #
 # class ReviewSerializer(serializers.ModelSerializer):
 #     author = serializers.ReadOnlyField(source='author.email')
