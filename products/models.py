@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.contrib.auth import get_user_model
+from rest_framework.pagination import PageNumberPagination
 from slugify import slugify
 
 User = get_user_model()

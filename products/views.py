@@ -1,3 +1,5 @@
+from rest_framework.pagination import PageNumberPagination
+
 from products.filters import ProductPriceFilter
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
@@ -12,6 +14,10 @@ from .serializers import (ProductSerializer, CommentSerializer,
                           CategorySerializer, LikeSerializer, FavoriteSerializer, RatingSerializer)
 from .permissions import IsAuthor
 from django.db.models import Q
+
+
+class PaginationReview(PageNumberPagination):
+    page_size = 10
 
 
 class ProductViewSet(ModelViewSet):
