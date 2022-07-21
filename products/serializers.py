@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from products.models import Product, Comment, Category, Like, Favorites, Rating, ProductReview
+from products.models import Product, Comment, Category, Like, Favorites, Rating
 from .utils import get_rating
 from django.contrib.auth import get_user_model
 
@@ -49,20 +49,25 @@ class ProductSerializer(serializers.ModelSerializer):
         rep['author'] = str(self.context.get('request').user) == str(rep['user'])
         return rep
 
+    def save(self, **kwargs):
+        email = self.context.get('request').user
+        self.validated_data['user'] = email
+        return super().save(**kwargs)
 
-class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.email')
 
-    class Meta:
-        model = ProductReview
-        fields = '__all__'
-
-    def create(self, validated_data):
-        request = self.context.get('request')
-        user = request.user
-        validated_data['author'] = user
-
-        return super().create(validated_data)
+# class ReviewSerializer(serializers.ModelSerializer):
+#     author = serializers.ReadOnlyField(source='author.email')
+#
+#     class Meta:
+#         model = ProductReview
+#         fields = '__all__'
+#
+#     def create(self, validated_data):
+#         request = self.context.get('request')
+#         user = request.user
+#         validated_data['author'] = user
+#
+#         return super().create(validated_data)
 
 
 class FavoriteSerializer(serializers.ModelSerializer):

@@ -43,18 +43,18 @@ class Product(models.Model):
         return self.title
 
 
-class ProductReview(models.Model):
-    product = models.ForeignKey(Product,
-                                on_delete=models.CASCADE,
-                                related_name='reviews')
-    author = models.ForeignKey(get_user_model(),
-                               on_delete=models.CASCADE,
-                               related_name='reviews')
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self) -> str:
-        return self.author
+# class ProductReview(models.Model):
+#     product = models.ForeignKey(Product,
+#                                 on_delete=models.CASCADE,
+#                                 related_name='reviews')
+#     author = models.ForeignKey(get_user_model(),
+#                                on_delete=models.CASCADE,
+#                                related_name='reviews')
+#     text = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
+#
+#     def __str__(self) -> str:
+#         return self.author
 
 
 class Comment(models.Model):
