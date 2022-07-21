@@ -22,10 +22,12 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['title', 'description']
     filterset_class = ProductPriceFilter
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ProductSerializer
-        return super().get_serializer_class()
+    @swagger_auto_schema(request_body=ProductSerializer)
+    def create(self, request, *args, **kwargs):
+        product_serializer = ProductSerializer(data=request.POST, context={'request': request})
+        if product_serializer.is_valid(raise_exception=True):
+            product = product_serializer.save()
+            product_data = product_serializer.data
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:

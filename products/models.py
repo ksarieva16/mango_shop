@@ -52,9 +52,6 @@ class Product(models.Model):
 #                                related_name='reviews')
 #     text = models.TextField()
 #     created_at = models.DateTimeField(auto_now_add=True)
-#
-#     def __str__(self) -> str:
-#         return self.author
 
 
 class Comment(models.Model):
