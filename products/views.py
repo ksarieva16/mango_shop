@@ -1,4 +1,4 @@
-from rest_framework.pagination import PageNumberPagination
+
 
 from products.filters import ProductPriceFilter
 from rest_framework.viewsets import ModelViewSet
@@ -16,8 +16,7 @@ from .permissions import IsAuthor
 from django.db.models import Q
 
 
-class PaginationReview(PageNumberPagination):
-    page_size = 10
+
 
 
 class ProductViewSet(ModelViewSet):
@@ -74,35 +73,25 @@ class ProductViewSet(ModelViewSet):
             message = 'In favorites'
         return Response(message, status=200)
 
-    @action(detail=False, methods=['get'])
-    def search(self, request, pk=None):
-        q = request.query_params.get('q')
-        queryset = self.get_queryset()
-        queryset = queryset.filter(title__icontains=q)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        serializer = ProductSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(methods=['GET'], detail=False)
-    def sort(self, request):
-        filter = request.query_params.get('filter')
-        if filter == 'A-Z':
-            queryset = self.get_queryset().order_by('title')
-        elif filter == 'Z-A':
-            queryset = self.get_queryset().order_by('-title')
-        elif filter == 'replies':
-            maximum = 0
-            for problem in self.get_queryset():
-                if maximum < problem.replies.count():
-                    maximum = problem.replies.count()
-                    queryset = self.get_queryset().filter(id=problem.id)
-        else:
-            queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # @action(methods=['GET'], detail=False)
+    # def sort(self, request):
+    #     filter = request.query_params.get('filter')
+    #     if filter == 'A-Z':
+    #         queryset = self.get_queryset().order_by('title')
+    #     elif filter == 'Z-A':
+    #         queryset = self.get_queryset().order_by('-title')
+    #     elif filter == 'replies':
+    #         maximum = 0
+    #         for problem in self.get_queryset():
+    #             if maximum < problem.replies.count():
+    #                 maximum = problem.replies.count()
+    #                 queryset = self.get_queryset().filter(id=problem.id)
+    #     else:
+    #         queryset = self.get_queryset()
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(request_body=CommentSerializer)
