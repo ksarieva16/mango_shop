@@ -7,12 +7,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from .models import Product, Comment, Category, Like, Favorites
+from .models import Product, Comment, Category, Like, Favorites, Rating
 from .serializers import (ProductSerializer, CommentSerializer,
-                          CategorySerializer, LikeSerializer, FavoriteSerializer)
+                          CategorySerializer, LikeSerializer, FavoriteSerializer, RatingSerializer)
 from .permissions import IsAuthor
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
 
 class PaginationReview(PageNumberPagination):
@@ -120,6 +121,18 @@ class CategoryViewSet(ModelViewSet):
             self.permission_classes = [permissions.AllowAny]
         elif self.action in ['destroy', 'update', 'partial_update', 'create']:
             self.permission_classes = [permissions.IsAdminUser]
+        return super().get_permissions()
+
+
+class RatingViewSet(ModelViewSet):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+
+    def get_permissions(self):
+        if self.action in ['update', 'partial_update', 'destroy']:
+            self.permission_classes = [IsAuthor]
+        elif self.action in ['create']:
+            self.permission_classes = [permissions.IsAuthenticated]
         return super().get_permissions()
 
 

@@ -1,7 +1,7 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.contrib.auth import get_user_model
 from slugify import slugify
-
 
 User = get_user_model()
 
@@ -53,7 +53,6 @@ class ProductReview(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-
 class Comment(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments')
     """ ForeignKey - поле для свзязи с другой моделью. Обязательное свойство: модель, on_delete - определяет, 
@@ -63,7 +62,6 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return f'Comment from {self.author.name} to {self.product}'
 
@@ -71,6 +69,18 @@ class Comment(models.Model):
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
         ordering = ['-created_at']
+
+
+class Rating(models.Model):
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='ratings')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ratings')
+    rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)])
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return f'{self.author}: {self.pin} - {self.rating}'
 
 
 class Like(models.Model):

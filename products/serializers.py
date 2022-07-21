@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from products.models import Product, ProductReview, Comment, Category, Like, Favorites
-
+from products.models import Product, ProductReview, Comment, Category, Like, Favorites, Rating
+from .utils import get_rating
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +22,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Product
         fields = '__all__'
@@ -68,3 +67,23 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ['author', 'product', 'like']
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    author = serializers.ReadOnlyField(source='author.name')
+
+    class Meta:
+        model = Rating
+        fields = '__all__'
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        product = validated_data.get('product')
+
+        if Rating.objects.filter(author=user, product=product):
+            rating = Rating.objects.get(author=user, product=product)
+            return rating
+
+        rating = Rating.objects.create(author=request.user, **validated_data)
+        return rating
