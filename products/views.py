@@ -13,7 +13,7 @@ from .models import Product, Comment, Category, Like, Favorites, Rating
 from .serializers import (ProductSerializer, CommentSerializer,
                           CategorySerializer, LikeSerializer, FavoriteSerializer, RatingSerializer)
 from .permissions import IsAuthor
-from django.db.models import Q
+
 
 
 
