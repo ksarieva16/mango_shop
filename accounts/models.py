@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 class UserManager(BaseUserManager):
-    def _create(self, email, password, name, **extra_fields):
+    def create(self, email, password, name, **extra_fields):
         email = self.normalize_email(email)
         user = self.model(email=email, name=name, **extra_fields)
         user.set_password(password)
@@ -14,12 +14,12 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password, name, **extra_fields):
         extra_fields.setdefault('is_active', False)
         extra_fields.setdefault('is_staff', False)
-        return self._create(email, password, name, **extra_fields)
+        return self.create(email, password, name, **extra_fields)
 
     def create_superuser(self, email, password, name, **extra_fields):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', True)
-        return self._create(email, password, name, **extra_fields)
+        return self.create(email, password, name, **extra_fields)
 
 
 class User(AbstractBaseUser):
