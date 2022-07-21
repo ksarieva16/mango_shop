@@ -28,6 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
+        rep['rating'] = get_rating(rep.get('id'), Product)
         rep['comments'] = CommentSerializer(instance.comments.all(), many=True).data
         # rep['image'] = ImageSerializer(instance.product_image.all(), many=True, context=self.context).data
         rep['like'] = LikeSerializer(instance.like.all(), many=True).data
