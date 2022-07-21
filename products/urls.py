@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProductViewSet, CommentViewSet, CategoryViewSet, FavoriteViewSet, LikeViewSet
+from .views import ProductViewSet, CommentViewSet, CategoryViewSet
 
 from rest_framework.routers import DefaultRouter
 
@@ -9,8 +9,8 @@ router.register('products', ProductViewSet, 'list')
 router.register('comments', CommentViewSet)
 # router.register('image', ImageView)
 router.register('category', CategoryViewSet)
-router.register('favorites', FavoriteViewSet)
-router.register('likes', LikeViewSet)
+# router.register('favorites', FavoriteViewSet)
+# router.register('likes', LikeViewSet)
 
 urlpatterns = []
 urlpatterns += router.urls

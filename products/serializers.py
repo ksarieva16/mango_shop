@@ -62,56 +62,12 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.email')
-
     class Meta:
         model = Favorites
-        fields = '__all__'
-
-    def validate(self, attrs):
-        attrs['user'] = self.context.get('request').user
-        return super().validate(attrs)
-
-    def create(self, validated_data):
-        user = validated_data['user']
-        product = validated_data['product']
-        if Favorites.objects.filter(user=user, product=product):
-            Favorites.objects.filter(user=user, product=product).delete()
-            validated_data = {}
-            return super().create(validated_data)
-        else:
-            return super().create(validated_data)
-
-    def save(self, **kwargs):
-        try:
-            super().save(**kwargs)
-        except IntegrityError:
-            print('')
+        fields = ['author', 'product', 'favorites']
 
 
 class LikeSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.email')
-
     class Meta:
         model = Like
-        fields = '__all__'
-
-    def validate(self, attrs):
-        attrs['user'] = self.context.get('request').user
-        return super().validate(attrs)
-
-    def create(self, validated_data):
-        user = validated_data['user']
-        product = validated_data['product']
-        if Like.objects.filter(user=user, product=product):
-            Like.objects.filter(user=user, product=product).delete()
-            validated_data = {}
-            return super().create(validated_data)
-        else:
-            return super().create(validated_data)
-
-    def save(self, **kwargs):
-        try:
-            super().save(**kwargs)
-        except IntegrityError:
-            print('')
+        fields = ['author', 'product', 'like']

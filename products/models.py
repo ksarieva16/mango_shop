@@ -85,10 +85,11 @@ class Comment(models.Model):
 class Like(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='like')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='like')
-    like = models.BooleanField(default=False, blank=True)
+    like = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.author}: liked {self.product}'
+
 
     class Meta:
         verbose_name = 'like'
@@ -98,7 +99,7 @@ class Like(models.Model):
 class Favorites(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='favorites')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorites')
-    favorites = models.BooleanField(default=False, blank=True)
+    favorites = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.author}: favorites {self.product}'

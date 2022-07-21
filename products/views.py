@@ -39,19 +39,40 @@ class ProductViewSet(ModelViewSet):
             self.permission_classes = [permissions.IsAdminUser]
         return super().get_permissions()
 
+    @action(['GET'], detail=True)
+    def like(self, request, pk=None):
+        product = self.get_object()
+        user = request.user
 
-@swagger_auto_schema(request_body=LikeSerializer)
-class LikeViewSet(ModelViewSet):
-    queryset = Like.objects.all()
-    serializer_class = LikeSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+        try:
+            like = Like.objects.filter(product_id=product, author=user)
+            res = not like[0].like
+            if res:
+                like[0].save()
+            else:
+                like.delete()
+            message = 'Like' if like else 'Dislike'
+        except IndexError:
+            Like.objects.create(product_id=product.id, author=user, like=True)
+            message = 'Like'
+        return Response(message, status=200)
 
-
-@swagger_auto_schema(request_body=FavoriteSerializer)
-class FavoriteViewSet(ModelViewSet):
-    queryset = Favorites.objects.all()
-    serializer_class = FavoriteSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    @action(['GET'], detail=True)
+    def favorite(self, request, pk=None):
+        product = self.get_object()
+        user = request.user
+        try:
+            favorites = Favorites.objects.filter(product_id=product, author=user)
+            res = not favorites[0].favorites
+            if res:
+                favorites[0].save()
+            else:
+                favorites.delete()
+            message = 'In favorites' if favorites else 'Not in favorites'
+        except IndexError:
+            Favorites.objects.create(product_id=product.id, author=user, favorites=True)
+            message = 'In favorites'
+        return Response(message, status=200)
 
 
 
